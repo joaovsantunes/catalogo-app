@@ -14,9 +14,50 @@ class Avaliacao:
             texto += f'  -  "{self.comentario}"'
         return texto
 
+# Obra: Classe base. outras casses herdam dela
+class Obra:
+    tipo = "Obra"  # Atributo da classe : cada Subclasse sobrescreve
+
+    def __init__(self, titulo, ano, genero):
+        self.titulo = titulo
+        self.ano = ano
+        self.genero = genero
+        self.avaliacoes = []
+
+    def adicionar_avaliacao(self, avaliacao):
+        self.avaliacoes.append(avaliacao)
+
+    def media(self):
+        if not self.avaliacoes:
+            return 0.0
+        total = sum(a.nota for a in self.avaliacoes)
+        return total / len(self.avaliacoes)
+
+    def detalhes(self):
+        # Informações específicas de cada tipo, as subclasses sobrescrevem
+        return""
+
+    def __str__(self):
+        base =f"[{self.tipo}] {self.titulo} ({self.ano}) - {self.genero}"
+        extra = self.detalhes()
+        if extra:
+            base = f"  | {extra}"
+        return f"{base} | média: {self.media():.1f} ({len(self.avaliacoes)} avaliacões)" 
+
+
+
 def main():
-    avaliacao = Avaliacao ("Joãozinho", 9, "Otimo filme")
+    avaliacao = Avaliacao ("Joãozinho", 5, "Otimo filme")
     print(avaliacao)
+
+    obra = Obra("Largado e pelado", 2014, "Ficção Cientifica")
+    print(obra)
+
+    obra.adicionar_avaliacao(Avaliacao("Ano", 9))
+    obra.adicionar_avaliacao(Avaliacao("Bruno", 7))
+    print(obra)
+    print("Média: ",obra.media())
+
 
 if __name__=="__main__": 
     main()
