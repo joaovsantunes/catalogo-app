@@ -1,63 +1,67 @@
-#Avaliacao:O que o usuário escreve sobre uma obra
+#Avaliacao:o que o usuario escreve sobre uma obra
 class Avaliacao:
-    def __init__(self, autor, nota, comentario = ""):
-        if not 0<= nota <= 10:
-            raise ValueError("A nota deve estar entre 0 e 10.")
-
+    def __init__(self, autor , nota, comentario = ""):
+        if not 0 <= nota <= 10:
+            raise ValueError ("A nota deve estar entre 0 e 10. ")
         self.autor = autor
         self.nota = nota
         self.comentario = comentario
-
     def __str__(self):
         texto = f"{self.autor}: {self.nota}/10"
         if self.comentario:
-            texto += f'  -  "{self.comentario}"'
+            texto +=f' - "{self.comentario}"'
         return texto
-
-# Obra: Classe base. outras casses herdam dela
+#Obra: classe base. Outras classes herdam dela
 class Obra:
-    tipo = "Obra"  # Atributo da classe : cada Subclasse sobrescreve
-
-    def __init__(self, titulo, ano, genero):
+    tipo ="Obra" # atributo de classe: cada subclasse sobrescreve
+    def __init__ (self, titulo, ano, genero):
         self.titulo = titulo
         self.ano = ano
         self.genero = genero
         self.avaliacoes = []
-
     def adicionar_avaliacao(self, avaliacao):
         self.avaliacoes.append(avaliacao)
-
-    def media(self):
+    def media (self):
         if not self.avaliacoes:
             return 0.0
         total = sum(a.nota for a in self.avaliacoes)
         return total / len(self.avaliacoes)
-
     def detalhes(self):
-        # Informações específicas de cada tipo, as subclasses sobrescrevem
-        return""
-
+        #Informações especificas de cada tipo, as subclasses sobrescrevem
+        return ""
     def __str__(self):
-        base =f"[{self.tipo}] {self.titulo} ({self.ano}) - {self.genero}"
+        base = f"[{self.tipo}] {self.titulo} ({self.ano}) - {self.genero}"
         extra = self.detalhes()
         if extra:
-            base = f"  | {extra}"
-        return f"{base} | média: {self.media():.1f} ({len(self.avaliacoes)} avaliacões)" 
-
-
-
+            base += f" | {extra}"
+        return f"{base} | média: {self.media():.1f} ({len(self.avaliacoes)} avaliações)"
+class Filme(Obra):
+    tipo = "Filme"
+    def __init__(self, titulo, ano, genero, duracao_min):
+        super().__init__(titulo, ano, genero)
+        self.duracao_min = duracao_min
+    def detalhes(self):
+        return f"{self.duracao_min} min"
+class Serie(Obra):
+    tipo = "Série"
+    def __init__(self, titulo, ano, genero, temporadas):
+        super().__init__(titulo, ano, genero)
+        self.temporadas = temporadas
+    def detalhes(self):
+        return f"{self.temporadas} temporadas"
 def main():
-    avaliacao = Avaliacao ("Joãozinho", 5, "Otimo filme")
+    avaliacao = Avaliacao("Gadeia",5, "Otimo filme")
     print(avaliacao)
-
-    obra = Obra("Largado e pelado", 2014, "Ficção Cientifica")
+    obra = Obra("Interestelar",2014, "Ficção Cientíica")
     print(obra)
-
-    obra.adicionar_avaliacao(Avaliacao("Ano", 9))
-    obra.adicionar_avaliacao(Avaliacao("Bruno", 7))
+    obra.adicionar_avaliacao(Avaliacao("Ana",9))
+    obra.adicionar_avaliacao(Avaliacao("Bruno",7))
     print(obra)
-    print("Média: ",obra.media())
-
-
-if __name__=="__main__": 
+    print("Média: ", obra.media())
+    filme = Filme("Matrix", 1999, "Ficção Cientifica", 136)
+    filme.adicionar_avaliacao(Avaliacao("Carla",10))
+    print(filme)
+    serie = Serie ("O Mentalista",2017,"Suspense policial", 3)
+    print(serie)
+if __name__ == "__main__":
     main()
